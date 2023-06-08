@@ -17,7 +17,9 @@ const HomePage = async () => {
   return (
     <main className="container mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 items-center">
       {total >= 1 ? (
-        products.map((product: Product) => <ProductCard product={product} />)
+        products.map((product: Product) => (
+          <ProductCard key={product.id} product={product} />
+        ))
       ) : (
         <h1>No product to show.</h1>
       )}
