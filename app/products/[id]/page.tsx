@@ -1,5 +1,5 @@
 import { Product } from "@/app/types";
-import { Button } from "@/components/ui/button";
+import { AddToCartButton } from "@/components/product/addToCartButton";
 import Image from "next/image";
 
 interface PageProps {
@@ -18,8 +18,6 @@ async function getProduct(id: string) {
 
 const ProductPage = async ({ params }: PageProps) => {
   const product: Product = await getProduct(params.id);
-
-  console.log(product);
 
   return (
     <section className="text-gray-700 body-font overflow-hidden bg-white">
@@ -48,8 +46,8 @@ const ProductPage = async ({ params }: PageProps) => {
                       fill="currentColor"
                       stroke="currentColor"
                       strokeLinecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       className="w-4 h-4 text-red-500"
                       viewBox="0 0 24 24"
                     >
@@ -60,11 +58,13 @@ const ProductPage = async ({ params }: PageProps) => {
               </span>
             </div>
             <p className="leading-relaxed">{product.description}</p>
-            <div className="flex mt-6 items-center pt-5 border-t-2 border-gray-200 mb-5">
+            <div className="flex mt-6 items-center pt-5 border-t-2 border-gray-200 mb-5 gap-5">
               <span className="title-font font-medium text-2xl text-gray-900">
                 ${product.price}
               </span>
-              <Button className="flex ml-auto">Add to cart</Button>
+              <div className="max-w-10">
+                <AddToCartButton product={product} />
+              </div>
             </div>
           </div>
         </div>
