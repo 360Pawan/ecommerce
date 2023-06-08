@@ -1,5 +1,9 @@
+"use client";
+
 import React from "react";
 import { ShoppingBag } from "lucide-react";
+import { useSelector,  } from "react-redux";
+
 
 import {
   Menubar,
@@ -11,6 +15,9 @@ import {
 } from "@/components/ui/menubar";
 
 export const Cart = () => {
+  const value = useSelector((state: { value: number }) => state.value);
+  
+
   return (
     <Menubar>
       <MenubarMenu>
@@ -19,8 +26,9 @@ export const Cart = () => {
         </MenubarTrigger>
         <MenubarContent className="mr-16">
           <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+            <p>Counter Value: {value}</p>
           </MenubarItem>
+         
         </MenubarContent>
       </MenubarMenu>
     </Menubar>

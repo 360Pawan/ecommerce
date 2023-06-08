@@ -25,13 +25,13 @@ export const Authentication = () => {
       <MenubarMenu>
         <MenubarTrigger>
           <Avatar>
-            <AvatarImage src={session.user?.image} />
+            <AvatarImage src={session?.user?.image || undefined} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </MenubarTrigger>
         <MenubarContent className="mr-7">
           <MenubarItem>
-            <p>{session.user?.name}</p>
+            <p>{session.user?.name || session.user?.firstName}</p>
           </MenubarItem>
           <MenubarItem>
             <p>{session.user?.email}</p>

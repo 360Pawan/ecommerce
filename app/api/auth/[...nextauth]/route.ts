@@ -1,14 +1,12 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId:
-        "51137941903-vmltedm6fucq96upq8jr6ib0k0t3nd2d.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientId: process.env.CLIENT_ID || "",
+      clientSecret: process.env.CLIENT_SECRET || "",
     }),
 
     CredentialsProvider({
@@ -43,12 +41,11 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       return { ...token, ...user };
     },
 
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
+    async session({ session, token }: { session: any; token: any }) {
       session.user = token;
 
       return session;
