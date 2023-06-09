@@ -9,7 +9,13 @@ export const loadState = () => {
         return undefined;
       }
 
-      return JSON.parse(serializedState);
+      const { cartItems } = JSON.parse(serializedState);
+      const state = {
+        cart: { cartItems: cartItems },
+        filters: { filter: "", startupProducts: [] },
+      };
+
+      return state;
     }
   } catch (error) {
     console.log("Error loading state from localStorage:", error);
@@ -20,7 +26,8 @@ export const loadState = () => {
 export const saveState = (state: { cart: CartState }) => {
   try {
     if (typeof window !== "undefined" && window.localStorage) {
-      const serializedState = JSON.stringify(state);
+      const cartState = state.cart;
+      const serializedState = JSON.stringify(cartState);
       localStorage.setItem("state", serializedState);
     }
   } catch (error) {

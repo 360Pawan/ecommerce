@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
-import { setFilter } from "@/redux/filterSlice";
+import { filterProducts, setFilter } from "@/redux/filterSlice";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -25,15 +25,17 @@ export const FilterMenu = () => {
 
   const onPriceAscending = () => {
     dispatch(setFilter("ascending"));
+    dispatch(filterProducts("ascending"));
   };
 
   const onPriceDescending = () => {
     dispatch(setFilter("descending"));
+    dispatch(filterProducts("descending"));
   };
 
   return (
     <div className="my-5 flex justify-between items-center">
-      All Products
+      <h1 className="text-xl font-semibold">All Products</h1>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <SlidersHorizontal />
@@ -42,13 +44,17 @@ export const FilterMenu = () => {
           <DropdownMenuLabel>Filter</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className={`${filter === "ascending" ? "bg-red-700" : ""}`}
+            className={`${
+              filter === "ascending" ? "bg-slate-200" : ""
+            } cursor-pointer`}
             onClick={onPriceAscending}
           >
             Price: Low to High
           </DropdownMenuItem>
           <DropdownMenuItem
-            className={`${filter === "descending" ? "bg-red-700" : ""}`}
+            className={`${
+              filter === "descending" ? "bg-slate-200" : ""
+            } cursor-pointer`}
             onClick={onPriceDescending}
           >
             Price: High to Low
