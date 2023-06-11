@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { ShoppingBag } from "lucide-react";
 import { Trash2 } from "lucide-react";
 
@@ -11,12 +11,13 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { CartProduct, removeFromCart } from "@/redux/cartSlice";
-import { Button } from "@/components/ui/button";
+import { removeFromCart } from "@/redux/cartSlice";
 import Image from "next/image";
+import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
+import { ClientOnly } from "@/components/clientOnly";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -24,9 +25,6 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const Cart = () => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
-  const [cartCount, setCartCount] = useState(0);
-
-  useEffect(() => setCartCount(cartItems.length), [cartItems]);
 
   const cartTotal = useMemo(() => {
     return cartItems.reduce((accumulator, current) => {
@@ -46,13 +44,15 @@ export const Cart = () => {
       <MenubarMenu>
         <MenubarTrigger>
           <div className="relative py-2">
-            {cartCount >= 1 ? (
-              <div className="-top-1 absolute left-3">
-                <p className="flex h-2 w-2 items-center justify-center rounded-full bg-black p-3 text-xs text-white">
-                  {cartCount}
-                </p>
-              </div>
-            ) : null}
+            <ClientOnly>
+              {cartItems.length >= 1 ? (
+                <div className="-top-1 absolute left-3">
+                  <p className="flex h-2 w-2 items-center justify-center rounded-full bg-black p-3 text-xs text-white">
+                    {cartItems.length}
+                  </p>
+                </div>
+              ) : null}
+            </ClientOnly>
             <ShoppingBag />
           </div>
         </MenubarTrigger>
@@ -120,7 +120,14 @@ export const Cart = () => {
                     </p>
                   </div>
                   <div className="flex justify-end space-x-4">
-                    <Button>Continue to Checkout</Button>
+                    <MenubarItem className="cursor-pointer" asChild>
+                      <Link
+                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4"
+                        href="/checkout"
+                      >
+                        Continue to Checkout
+                      </Link>
+                    </MenubarItem>
                   </div>
                 </>
               ) : (

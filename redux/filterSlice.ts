@@ -22,16 +22,22 @@ const FilterSlice = createSlice({
     setStartupProducts(state, action: PayloadAction<Product[]>) {
       state.startupProducts = action.payload;
     },
-    // sortByPriceAscending() {},
-    // sortByPriceDescending() {},
+
+    filterProducts(state, action: PayloadAction<string>) {
+      if (action.payload === "ascending") {
+        state.startupProducts = state.startupProducts.sort(
+          (a, b) => a.price - b.price
+        );
+      } else if (action.payload === "descending") {
+        state.startupProducts = state.startupProducts.sort(
+          (a, b) => b.price - a.price
+        );
+      }
+    },
   },
 });
 
-export const {
-  setStartupProducts,
-  setFilter,
-  //   sortByPriceAscending,
-  //   sortByPriceDescending,
-} = FilterSlice.actions;
+export const { setStartupProducts, setFilter, filterProducts } =
+  FilterSlice.actions;
 
 export default FilterSlice.reducer;

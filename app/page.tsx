@@ -1,7 +1,7 @@
-import { FilterMenu } from "@/components/product/filter";
 import store from "@/redux/store";
 import { setStartupProducts } from "@/redux/filterSlice";
-import { ProductGrid } from "@/components/product/productGrid";
+import { Preloader } from "@/components/product/preloader";
+import { ProductsListing } from "@/components/product/productListing";
 
 async function getProducts() {
   const res = await fetch("https://dummyjson.com/products");
@@ -19,8 +19,8 @@ const HomePage = async () => {
 
   return (
     <main className="container mx-auto">
-      <FilterMenu />
-      <ProductGrid />
+      <Preloader products={products} />
+      {total >= 1 ? <ProductsListing /> : <h1>No product to show.</h1>}
     </main>
   );
 };
