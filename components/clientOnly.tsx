@@ -8,7 +8,7 @@ export const ClientOnly = ({
   className,
 }: {
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) => {
   const [hasMounted, setHasMounted] = useState(false);
 

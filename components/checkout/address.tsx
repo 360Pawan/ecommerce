@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +14,14 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector, useDispatch } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { setAddress, setStep } from "@/redux/checkoutSlice";
+import { useSession } from "next-auth/react";
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const formSchema = z.object({
   email: z
@@ -28,20 +36,33 @@ const formSchema = z.object({
 });
 
 export const Address = () => {
+  const dispatch = useAppDispatch();
+  const address = useAppSelector((state) => state.checkout.address);
+  const { data: session } = useSession();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      name: "",
-      address: "",
-      city: "",
-      state: "",
-      pinCode: "",
+      email: address.email || "",
+      name: address.name || "",
+      address: address.address || "",
+      city: address.city || "",
+      state: address.state || "",
+      pinCode: address.pinCode || "",
     },
   });
 
+  useEffect(() => {
+    form.setValue("email", session?.user?.email || address.email || "");
+    form.setValue(
+      "name",
+      session?.user?.firstName || session?.user?.name || address.name || ""
+    );
+  }, [session, form, address]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    dispatch(setStep("address"));
+    dispatch(setAddress(values));
   }
 
   return (
