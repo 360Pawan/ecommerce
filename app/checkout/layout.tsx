@@ -1,9 +1,11 @@
-import { Address } from "@/components/checkout/address";
 import { CartItem } from "@/components/checkout/cartItems";
-import { Payment } from "@/components/checkout/payment";
 import { Steps } from "@/components/checkout/steps";
 
-const checkoutPage = () => {
+export default function CheckoutLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <div className="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
@@ -17,11 +19,8 @@ const checkoutPage = () => {
           </p>
           <CartItem />
         </div>
-        <Address />
-        {/* <Payment/> */}
+        {children}
       </div>
     </>
   );
-};
-
-export default checkoutPage;
+}
