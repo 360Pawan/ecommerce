@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import { Product } from "@/app/types";
 import { AddToCartButton } from "./addToCartButton";
-import store from "@/redux/store";
 
 interface ProductCardProps {
   product: Product;
