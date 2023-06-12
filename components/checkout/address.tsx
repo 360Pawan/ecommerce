@@ -19,6 +19,7 @@ import type { TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { setAddress, setStep } from "@/redux/checkoutSlice";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -37,8 +38,9 @@ const formSchema = z.object({
 
 export const Address = () => {
   const dispatch = useAppDispatch();
-  const address = useAppSelector((state) => state.checkout.address);
   const { data: session } = useSession();
+  const router = useRouter();
+  const address = useAppSelector((state) => state.checkout.address);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,6 +65,7 @@ export const Address = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     dispatch(setStep("address"));
     dispatch(setAddress(values));
+    router.push("checkout/payment");
   }
 
   return (

@@ -3,6 +3,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "../ui/button";
 import { Product } from "@/app/types";
 import { addToCart } from "@/redux/cartSlice";
@@ -13,9 +14,11 @@ interface AddToCartButtonProps {
 
 export const AddToCartButton = ({ product }: AddToCartButtonProps) => {
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const onAddToCart = () => {
     dispatch(addToCart(product));
+    toast({ title: `Product added to cart successfully.` });
   };
 
   return (

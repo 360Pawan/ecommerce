@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 
 import { Header } from "@/layout/header";
 import Provider from "@/components/provider";
+import { Toaster } from "@/components/ui/toaster";
 
 import "@/styles/globals.css";
 import { ReduxProvider } from "@/components/reduxProvider";
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReduxProvider>
           <Provider>
+            <Toaster />
             <Header />
             {children}
           </Provider>
