@@ -41,6 +41,7 @@ export const Address = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const address = useAppSelector((state) => state.checkout.address);
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,7 +66,28 @@ export const Address = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     dispatch(setStep("address"));
     dispatch(setAddress(values));
-    router.push("checkout/payment");
+    // router.push("checkout/payment");
+
+    checkout();
+  }
+
+  async function checkout() {
+    const lineItems = cartItems.map((cartItem) => {
+      console.log("CART ITEM: ", cartItem);
+      return {
+        price: cartItem.id,
+        quantity: 1,
+      };
+    });
+    const res = await fetch("/api/stripe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ lineItems }),
+    });
+    const data = await res.json();
+    router.push(data.session.url);
   }
 
   return (

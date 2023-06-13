@@ -10,36 +10,41 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  console.log(product);
+
   return (
     <div className="relative flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
       <Link
         className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
         href={`/products/${product.id}`}
       >
-        <Image
+        {/* <Image
           className="object-contain"
           src={product.thumbnail}
           alt={product.title}
           sizes="100%"
           fill
-        />
+        /> */}
+
         <span className="absolute top-0 left-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">
-          {`${Math.round(product.discountPercentage)}% OFF`}
+          {/* {`${Math.round(product.discountPercentage)}% OFF`} */}
         </span>
       </Link>
       <div className="mt-4 px-5 pb-5">
         <Link href={`/products/${product.id}`}>
           <h5 className="text-xl tracking-tight text-slate-900">
-            {product.title}
+            {/* {product.title} */}
+            {product.product.name}
           </h5>
         </Link>
         <div className="mt-2 mb-5 flex items-center justify-between">
           <p>
             <span className="text-3xl font-bold text-slate-900">
-              ${product.price}
+              {/* ${product.price} */}
+              {product.unit_amount / 100}
             </span>
           </p>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             {Array.from({ length: Math.round(product.rating) }).map(
               (_, index) => (
                 <svg
@@ -57,7 +62,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <span className="mr-2 ml-3 rounded bg-yellow-200 px-2.5 py-0.5 text-xs font-semibold">
               {product.rating}
             </span>
-          </div>
+          </div> */}
         </div>
         <AddToCartButton product={product} />
       </div>
