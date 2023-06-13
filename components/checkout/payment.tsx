@@ -1,13 +1,87 @@
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Button } from "../ui/button";
+import { StripeCardElement } from "@stripe/stripe-js";
+import { useSelector } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
+import { RootState } from "@/redux/store";
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+const ifValidCardElement = (
+  card: StripeCardElement | null
+): card is StripeCardElement => card !== null;
 
 export const Payment = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const address = useAppSelector((state) => state.checkout.address);
+
+  const cartTotal = useMemo(() => {
+    return cartItems.reduce((accumulator, current) => {
+      const quantity = current.quantity || 1;
+      return (accumulator += current.price * quantity);
+    }, 0);
+  }, [cartItems]);
+
+  const handlePayment = async () => {
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const response = await fetch("/api/stripe", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: cartTotal * 100 }),
+    }).then((res) => res.json());
+
+    const {
+      paymentIntent: { client_secret },
+    } = response;
+
+    const cardDetails = elements.getElement(CardElement);
+
+    if (!ifValidCardElement(cardDetails)) return;
+
+    const paymentResult = await stripe.confirmCardPayment(client_secret, {
+      payment_method: {
+        card: cardDetails,
+        billing_details: {
+          name: address.name,
+          email: address.email,
+        },
+      },
+    });
+
+    if (paymentResult.error) {
+      alert(paymentResult.error);
+    } else {
+      if (paymentResult.paymentIntent.status === "succeeded") {
+        alert("Payment Successful");
+      }
+    }
+  };
+
   return (
     <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
       <p className="text-xl font-medium">Payment Details</p>
       <p className="text-gray-400">
         Complete your order by providing your payment details.
       </p>
-      <div className="">
+
+      <div className="mt-5">
+        <CardElement />
+        <Button onClick={handlePayment} className="mt-5">
+          Pay now
+        </Button>
+      </div>
+
+      {/* <div className="">
         <label htmlFor="email" className="mt-4 mb-2 block text-sm font-medium">
           Email
         </label>
@@ -163,7 +237,7 @@ export const Payment = () => {
       </div>
       <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
         Place Order
-      </button>
+      </button> */}
     </div>
   );
 };
