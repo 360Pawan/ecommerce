@@ -25,7 +25,7 @@ export const Authentication = () => {
       <MenubarMenu>
         <MenubarTrigger>
           <Avatar>
-            <AvatarImage src={session?.user?.image || undefined} />
+            <AvatarImage src={session?.user?.image ?? ""} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </MenubarTrigger>
