@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { ShoppingBag } from "lucide-react";
+import { IndianRupee, ShoppingBag } from "lucide-react";
 import { Trash2 } from "lucide-react";
 
 import {
@@ -35,11 +35,11 @@ export const Cart = () => {
   const cartTotal = useMemo(() => {
     return cartItems.reduce((accumulator, current) => {
       const quantity = current.quantity || 1;
-      return (accumulator += current.price * quantity);
+      return (accumulator += current.unit_amount * quantity);
     }, 0);
   }, [cartItems]);
 
-  const onCartItemRemove = (event: React.SyntheticEvent, id: number) => {
+  const onCartItemRemove = (event: React.SyntheticEvent, id: string) => {
     event.stopPropagation();
 
     dispatch(removeFromCart(id));
@@ -75,11 +75,11 @@ export const Cart = () => {
                     <MenubarItem asChild>
                       <Link
                         className="h-20 sm:h-32 cursor-pointer"
-                        href={`/products/${item.id}`}
+                        href={`/products/${item.product.id}`}
                       >
                         <Image
                           className="flex-shrink-0 object-cover dark:border-transparent rounded outline-none dark:bg-gray-500"
-                          src={item.thumbnail}
+                          src={item.product.images[0]}
                           width={200}
                           height={200}
                           alt="Polaroid camera"
@@ -90,22 +90,28 @@ export const Cart = () => {
                       <div className="flex justify-between w-full pb-2 space-x-2">
                         <div className="space-y-1">
                           <h3 className="text-lg font-semibold leading-snug sm:pr-8">
-                            {item.title}
+                            {item.product.name}
                           </h3>
-                          <p className="text-sm dark:text-gray-400">
+                          {/* <p className="text-sm dark:text-gray-400">
                             {item.brand}
-                          </p>
-                          <Quantity id={item.id} quantity={item.quantity} />
+                          </p> */}
+                          <Quantity
+                            id={item.product.id}
+                            quantity={item.quantity}
+                          />
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-semibold">${item.price}</p>
+                          <p className="text-lg font-semibold flex items-center">
+                            <IndianRupee />
+                            {item.unit_amount}
+                          </p>
                         </div>
                       </div>
                       <div className="flex text-sm divide-x">
                         <button
                           type="button"
                           className="flex items-center px-2 py-1 pl-0 space-x-1"
-                          onClick={(e) => onCartItemRemove(e, item.id)}
+                          onClick={(e) => onCartItemRemove(e, item.product.id)}
                         >
                           <Trash2 />
                           <span>Remove</span>
@@ -116,9 +122,10 @@ export const Cart = () => {
                 </MenubarItem>
               ))}
               <div className="text-right my-5">
-                <p>
+                <p className="font-semibold flex items-center justify-end">
                   Total amount:
-                  <span className="font-semibold"> ${cartTotal}</span>
+                  <IndianRupee />
+                  {cartTotal}
                 </p>
                 <p className="text-sm dark:text-gray-400">
                   Not including taxes and shipping costs

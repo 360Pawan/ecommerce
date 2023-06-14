@@ -4,9 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "i.dummyjson.com",
+        hostname: "files.stripe.com",
         port: "",
-        pathname: "/data/products/**",
+        pathname: "/links/**",
       },
     ],
   },

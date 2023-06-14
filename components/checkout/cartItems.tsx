@@ -7,7 +7,7 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { removeFromCart } from "@/redux/cartSlice";
 import { ClientOnly } from "../clientOnly";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { IndianRupee, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Quantity } from "./quantity";
 import { useToast } from "../ui/use-toast";
@@ -20,7 +20,7 @@ export const CartItem = () => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
 
-  const onCartItemRemove = (id: number) => {
+  const onCartItemRemove = (id: string) => {
     dispatch(removeFromCart(id));
     toast({ title: "Product removed successfully." });
   };
@@ -28,7 +28,7 @@ export const CartItem = () => {
   const cartTotal = useMemo(() => {
     return cartItems.reduce((accumulator, current) => {
       const quantity = current.quantity || 1;
-      return (accumulator += current.price * quantity);
+      return (accumulator += current.unit_amount * quantity);
     }, 0);
   }, [cartItems]);
 
@@ -40,36 +40,40 @@ export const CartItem = () => {
             key={item.id}
             className="flex flex-col rounded-lg bg-white sm:flex-row items-start"
           >
-            <Link href={`/products/${item.id}`}>
+            <Link href={`/products/${item.product.id}`}>
               <Image
                 className="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                src={item.thumbnail}
-                alt={item.title}
+                src={item.product.images[0]}
+                alt={item.product.name}
                 width={200}
                 height={200}
               />
             </Link>
             <div className="flex w-full flex-col px-4 py-4">
-              <span className="font-semibold">{item.title}</span>
-              <span className="float-right text-gray-400">{item.brand}</span>
-              <p className="text-lg font-bold">${item.price}</p>
+              <span className="font-semibold">{item.product.name}</span>
+              {/* <span className="float-right text-gray-400">{item.brand}</span> */}
+              <p className="text-lg font-bold flex items-center">
+                <IndianRupee />
+                {item.unit_amount}
+              </p>
             </div>
             <div>
               <button
                 type="button"
                 className="flex items-center px-2 py-1 pl-0 space-x-1"
-                onClick={() => onCartItemRemove(item.id)}
+                onClick={() => onCartItemRemove(item.product.id)}
               >
                 <Trash2 />
                 <span>Remove</span>
               </button>
-              <Quantity id={item.id} quantity={item.quantity} />
+              <Quantity id={item.product.id} quantity={item.quantity} />
             </div>
           </li>
         ))}
-        <p>
+        <p className="font-semibold flex items-center">
           Total amount:
-          <span className="font-semibold"> ${cartTotal}</span>
+          <IndianRupee />
+          {cartTotal}
         </p>
       </ClientOnly>
     </ul>

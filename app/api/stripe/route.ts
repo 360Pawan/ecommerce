@@ -16,15 +16,17 @@ const handler = async (request: NextRequest) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      success_url: "http://localhost:3000",
-      cancel_url: "http://localhost:3000/signin",
+      success_url:
+        `${process.env.DEV_SUCCESS_URL}?sessionId={CHECKOUT_SESSION_ID}` ?? "",
+      cancel_url: process.env.DEV_CANCEL_URL ?? "",
       line_items: body.lineItems,
       mode: "payment",
     });
+
     return NextResponse.json({ session });
   } catch (err) {
-    console.log("BROKEN");
     console.log(err);
+
     return new Response("Error", {
       status: 405,
     });

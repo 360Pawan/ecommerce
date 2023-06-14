@@ -20,6 +20,7 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { setAddress, setStep } from "@/redux/checkoutSlice";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { emptyCart } from "@/redux/cartSlice";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -73,12 +74,12 @@ export const Address = () => {
 
   async function checkout() {
     const lineItems = cartItems.map((cartItem) => {
-      console.log("CART ITEM: ", cartItem);
       return {
         price: cartItem.id,
-        quantity: 1,
+        quantity: cartItem.quantity,
       };
     });
+
     const res = await fetch("/api/stripe", {
       method: "POST",
       headers: {
@@ -86,8 +87,10 @@ export const Address = () => {
       },
       body: JSON.stringify({ lineItems }),
     });
+
     const data = await res.json();
     router.push(data.session.url);
+    dispatch(emptyCart());
   }
 
   return (

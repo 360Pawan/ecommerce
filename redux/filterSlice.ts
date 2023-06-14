@@ -26,11 +26,11 @@ const FilterSlice = createSlice({
     filterProducts(state, action: PayloadAction<string>) {
       if (action.payload === "ascending") {
         state.startupProducts = state.startupProducts.sort(
-          (a, b) => a.price - b.price
+          (a, b) => a.unit_amount - b.unit_amount
         );
       } else if (action.payload === "descending") {
         state.startupProducts = state.startupProducts.sort(
-          (a, b) => b.price - a.price
+          (a, b) => b.unit_amount - a.unit_amount
         );
       }
     },

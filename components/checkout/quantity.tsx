@@ -19,7 +19,7 @@ export const Quantity = ({
   id,
 }: {
   quantity: number | undefined;
-  id: number;
+  id: string;
 }) => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
