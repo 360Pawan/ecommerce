@@ -23,7 +23,7 @@ const handler = async (request: NextRequest) => {
     });
     return NextResponse.json({ session });
   } catch (err) {
-    console.log("BROKED");
+    console.log("BROKEN");
     console.log(err);
     return new Response("Error", {
       status: 405,
